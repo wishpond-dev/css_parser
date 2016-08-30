@@ -43,6 +43,16 @@ class CssParserBasicTests < Minitest::Test
     assert_equal 'color: blue;', @cp.find_by_selector('div').join(' ')
   end
 
+  def test_adding_an_import_ruleset
+    css_block = "@import 'https://font.test.com/css?family=font+test';"
+
+    @cp.parse_block_into_rule_sets!(css_block)
+
+    assert_equal true, @cp.import_rule_sets.include?(
+    "@import  'https://font.test.com/css?family=font+test';"
+    )
+  end
+
   def test_toggling_uri_conversion
     # with conversion
     cp_with_conversion = Parser.new(:absolute_paths => true)

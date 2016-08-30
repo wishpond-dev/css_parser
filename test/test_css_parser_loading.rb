@@ -133,7 +133,7 @@ class CssParserLoadingTests < Minitest::Test
   end
 
   def test_allowing_at_import_rules_from_add_block
-    css_block = "@import 'https://fonts.googleapis.com/css?family=Suez+One';"
+    css_block = "@import 'https://font.test.com/css?family=font+test';"
 
     parser = Parser.new
     parser.add_block!(css_block, :ignore_import => false)
@@ -142,7 +142,7 @@ class CssParserLoadingTests < Minitest::Test
   end
 
   def test_ignoring_at_import_rules_from_add_block
-    css_block = "@import 'https://fonts.googleapis.com/css?family=Suez+One';"
+    css_block = "@import 'https://font.test.com/css?family=font+test';"
 
     parser = Parser.new
     parser.add_block!(css_block, :ignore_import => true)
