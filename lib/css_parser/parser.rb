@@ -41,7 +41,6 @@ module CssParser
 
       # array of RuleSets
       @rules = []
-      @import_rule_sets = []
 
       @redirect_count = nil
 
@@ -280,9 +279,6 @@ module CssParser
       current_media_query = ''
       current_declarations = ''
 
-      import_selector = ''
-      import_rule_tokens = []
-
       block.scan(/(([\\]{2,})|([\\]?[{}\s"])|(.[^\s"{}\\]*))/).each do |matches|
         token = matches[0]
 
@@ -338,20 +334,21 @@ module CssParser
           end
 
         elsif token =~ /@import/i
-          in_at_import_rule = (token =~ /;/ ? false : true)
-          import_selector   = token
+          in_at_import_rule = true
+          current_selectors   = token
 
         # @import rule can have different syntax other than @import url;
         # for example @import url('landscape.css') screen and (orientation:landscape);
         # So to construct a full import rule We want to save all the tokens until we hit ;
         elsif in_at_import_rule
-          import_rule_tokens << token
+          current_declarations << token
 
           if token =~ /;$/
             in_at_import_rule = false
-            @import_rule_sets << "#{import_selector} #{import_rule_tokens.join('')}"
-            import_rule_tokens = []
-            import_selector = ''
+            current_declarations << token
+            add_rule!(current_selectors, current_declarations)
+            current_declarations = ''
+            current_selectors = ''
           end
 
         elsif in_charset or token =~ /@charset/i
