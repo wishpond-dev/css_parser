@@ -44,13 +44,10 @@ class CssParserBasicTests < Minitest::Test
   end
 
   def test_adding_an_import_ruleset
-    css_block = "@import 'https://font.test.com/css?family=font+test';"
+    rs = CssParser::RuleSet.new('@import', 'https://fonts.googleapis.com/css?family=Advent+Pro:500,700;')
+    @cp.add_rule_set!(rs)
+    assert_equal ['https://fonts.googleapis.com/css?family=Advent+Pro:500,700;'], @cp.find_by_selector('@import')
 
-    @cp.parse_block_into_rule_sets!(css_block)
-
-    assert_equal true, @cp.import_rule_sets.include?(
-    "@import  'https://font.test.com/css?family=font+test';"
-    )
   end
 
   def test_toggling_uri_conversion

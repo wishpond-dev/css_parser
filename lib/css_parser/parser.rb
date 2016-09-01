@@ -26,7 +26,7 @@ module CssParser
     MAX_REDIRECTS = 3
 
     # Array of CSS files that have been loaded.
-    attr_reader   :loaded_uris, :import_rule_sets
+    attr_reader   :loaded_uris
 
     #--
     # Class variable? see http://www.oreillynet.com/ruby/blog/2007/01/nubygems_dont_use_class_variab_1.html

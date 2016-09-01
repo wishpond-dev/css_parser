@@ -109,7 +109,7 @@ module CssParser
      str = ''
      each_declaration do |prop, val, is_important|
        importance = (options[:force_important] || is_important) ? ' !important' : ''
-       str += "#{prop}: #{val}#{importance}; "
+       str += "#{prop}:#{val}#{importance}; "
      end
      str.gsub(/^[\s^(\{)]+|[\n\r\f\t]*|[\s]+$/mx, '').strip
     end
