@@ -150,8 +150,19 @@ class CssParserLoadingTests < Minitest::Test
     assert_equal false, css_block.include?("@import")
   end
 
-  # in order for font-face to work we need to make sure new lines are
-  # removed after passing css_block to add_block!
+  ############ This Comment is for the next two tests: ##############
+  # test_allowing_font_face_rule and test_not_allowing_font_face_rule
+  #
+  # If font-face is allowed and the css block contains font-face
+  # then put all block in one line and remove new lines,
+  # the css parser cant handle @font-face otherwise.
+  #
+  #     # this check is inside add_block! method.
+  #     if options[:allow_font_face] && !(block !~ RE_AT_FONTFACE_RULE)
+  #      block.gsub!(/\n/, "")
+  #     end
+  # !(block !~ RE_AT_FONTFACE_RULE) will return true if font-face exists.
+
   def test_allowing_font_face_rule
 
     css_block = "@font-face {
