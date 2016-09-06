@@ -109,7 +109,17 @@ module CssParser
      str = ''
      each_declaration do |prop, val, is_important|
        importance = (options[:force_important] || is_important) ? ' !important' : ''
-       str += "#{prop}: #{val}#{importance}; "
+       # we need to trick css parser gem into thinking @import is a css selector and
+       # whatever comes after up to ; is the declaration. however declaration consists
+       # of two parts: property and value. so we need to go from
+       # from  "#{prop}: #{val}#{importance}; "
+       #    to "#{prop}:#{val}#{importance}; "
+       # this will result import rules to work properly and import urls not to break.
+       if selectors.include?("@import")
+         str += "#{prop}:#{val}#{importance}; "
+       else
+         str += "#{prop}: #{val}#{importance}; "
+       end
      end
      str.gsub(/^[\s^(\{)]+|[\n\r\f\t]*|[\s]+$/mx, '').strip
     end

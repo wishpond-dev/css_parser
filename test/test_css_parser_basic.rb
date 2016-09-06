@@ -43,6 +43,12 @@ class CssParserBasicTests < Minitest::Test
     assert_equal 'color: blue;', @cp.find_by_selector('div').join(' ')
   end
 
+  def test_adding_an_import_ruleset
+    rs = CssParser::RuleSet.new('@import', 'https://fonts.googleapis.com/css?family=Advent+Pro:500,700;')
+    @cp.add_rule_set!(rs)
+    assert_equal ['https://fonts.googleapis.com/css?family=Advent+Pro:500,700;'], @cp.find_by_selector('@import')
+  end
+
   def test_toggling_uri_conversion
     # with conversion
     cp_with_conversion = Parser.new(:absolute_paths => true)

@@ -272,6 +272,7 @@ module CssParser
       in_charset = false # @charset is ignored for now
       in_string = false
       in_at_media_rule = false
+      in_at_import_rule = false
       in_media_block = false
 
       current_selectors = ''
@@ -331,6 +332,25 @@ module CssParser
           else
             current_media_query += token.strip + ' '
           end
+
+        elsif token =~ /@import/i
+          in_at_import_rule = true
+          current_selectors   = token
+
+        # @import rule can have different syntax other than @import url;
+        # for example @import url('landscape.css') screen and (orientation:landscape);
+        # So to construct a full import rule We want to save all the tokens until we hit ;
+        elsif in_at_import_rule
+          current_declarations << token
+
+          if token =~ /;$/
+            in_at_import_rule = false
+            current_declarations << token
+            add_rule!(current_selectors, current_declarations)
+            current_declarations = ''
+            current_selectors = ''
+          end
+
         elsif in_charset or token =~ /@charset/i
           # iterate until we are out of the charset declaration
           in_charset = (token =~ /;/ ? false : true)
